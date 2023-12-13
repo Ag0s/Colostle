@@ -81,10 +81,10 @@ def save_load(state):
     if state == "load":
         with codecs.open('ColostleDeck.save', 'r', 'utf-8') as h:
             for i in h.readlines():
-                deck.append(i)
+                deck.append(i.strip())
         with codecs.open('ColostleDiscard.save', 'r', 'utf-8') as d:
             for x in d.readlines():
-                discard.append(x)
+                discard.append(x.strip())
         os.remove('ColostleDeck.save')
         os.remove('ColostleDiscard.save')
     return

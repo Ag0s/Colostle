@@ -38,7 +38,7 @@ def init():
 
 def main():
     draw_amount = ""
-    while draw_amount == "":
+    while draw_amount not in ['1','2','3','4','5','q','Q']:
         if show_deck_size:
             draw_amount = input("Draw how many cards (%i left)? " % len(deck))
         else:

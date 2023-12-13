@@ -21,8 +21,7 @@ suits = ["♥", "♦", "♣", "♠"]
 deck = []
 discard = []
 
-def main():
-    create_deck()
+def init():
     print("╔═══╗    ╔╗          ╔╗ ╔╗     ")
     print("║╔═╗║    ║║         ╔╝╚╗║║     ")
     print("║║ ╚╝╔══╗║║ ╔══╗╔══╗╚╗╔╝║║ ╔══╗")
@@ -34,17 +33,20 @@ def main():
         answer = input("Continue last session? ")
         if answer in ["y","yes"]:
             save_load('load')
-    while True:
-        draw_amount = ""
-        while draw_amount == "":
-            if show_deck_size:
-                draw_amount = input("Draw how many cards (%i left)? " % len(deck))
-            else:
-                draw_amount = input("Draw how many cards? ")
-            if draw_amount == "q":
-                quit()
-        cards = draw_cards(int(draw_amount))
-        print(*cards, sep = " ║ ")
+    else: 
+        create_deck()
+
+def main():
+    draw_amount = ""
+    while draw_amount == "":
+        if show_deck_size:
+            draw_amount = input("Draw how many cards (%i left)? " % len(deck))
+        else:
+            draw_amount = input("Draw how many cards? ")
+        if draw_amount == "q":
+            quit()
+    cards = draw_cards(int(draw_amount))
+    print(*cards, sep = " ║ ")
 
 def create_deck():
     del deck[:]
@@ -98,6 +100,8 @@ def quit():
 
 if __name__ == "__main__":
     try:
-        main()
+        init()
+        while True:
+            main()
     except KeyboardInterrupt:
         quit()

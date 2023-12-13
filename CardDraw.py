@@ -1,7 +1,7 @@
 #! /usr/share/bin python3
-import itertools, random, sys
+import itertools, random, sys, os.path, codecs
 
-show_deck_size = False
+show_deck_size = True
 
 cards = ["2",
         "3",
@@ -21,6 +21,38 @@ suits = ["♥", "♦", "♣", "♠"]
 deck = []
 discard = []
 
+def main():
+    create_deck()
+    print("╔═══╗    ╔╗          ╔╗ ╔╗     ")
+    print("║╔═╗║    ║║         ╔╝╚╗║║     ")
+    print("║║ ╚╝╔══╗║║ ╔══╗╔══╗╚╗╔╝║║ ╔══╗")
+    print("║║ ╔╗║╔╗║║║ ║╔╗║║══╣ ║║ ║║ ║╔╗║")
+    print("║╚═╝║║╚╝║║╚╗║╚╝║╠══║ ║╚╗║╚╗║║═╣")
+    print("╚═══╝╚══╝╚═╝╚══╝╚══╝ ╚═╝╚═╝╚══╝")
+    print("Submit q to quit\n")
+    if os.path.isfile("./ColostleDeck.save"):
+        answer = input("Continue last session? ")
+        if answer in ["y","yes"]:
+            save_load('load')
+    while True:
+        draw_amount = ""
+        while draw_amount == "":
+            if show_deck_size:
+                draw_amount = input("Draw how many cards (%i left)? " % len(deck))
+            else:
+                draw_amount = input("Draw how many cards? ")
+            if draw_amount == "q":
+                quit()
+        cards = draw_cards(int(draw_amount))
+        print(*cards, sep = " ║ ")
+
+def create_deck():
+    del deck[:]
+    del discard[:]
+    for card in cards:
+        for suit in suits:
+            deck.append(card+suit)
+
 def draw_cards(draw_amount):
     cards = []
     for _ in itertools.repeat(None, draw_amount):
@@ -34,36 +66,33 @@ def draw_cards(draw_amount):
             discard.append(card)
     return cards
 
-def create_deck():
-    for card in cards:
-        for suit in suits:
-            deck.append(card+suit)
-    del discard[:]
-        
-def main():
-    create_deck()
-    print("╔═══╗    ╔╗          ╔╗ ╔╗     ")
-    print("║╔═╗║    ║║         ╔╝╚╗║║     ")
-    print("║║ ╚╝╔══╗║║ ╔══╗╔══╗╚╗╔╝║║ ╔══╗")
-    print("║║ ╔╗║╔╗║║║ ║╔╗║║══╣ ║║ ║║ ║╔╗║")
-    print("║╚═╝║║╚╝║║╚╗║╚╝║╠══║ ║╚╗║╚╗║║═╣")
-    print("╚═══╝╚══╝╚═╝╚══╝╚══╝ ╚═╝╚═╝╚══╝")
-    print("Submit q to quit\n")
-    while True:
-        draw_amount = ""
-        while draw_amount == "":
-            if show_deck_size:
-                draw_amount = input("Draw how many cards (%i left)? " % len(deck))
-            else:
-                draw_amount = input("Draw how many cards? ")
-            if draw_amount == "q":
-                quit()
-        cards = draw_cards(int(draw_amount))
-        print(*cards, sep = " ║ ")
+def save_load(state):
+    # save
+    if state == "save":
+        with codecs.open('ColostleDeck.save', 'w', 'utf-8') as f:
+            for i in deck:
+                f.write('%s\n' %i)
+        with codecs.open('ColostleDiscard.save', 'w', 'utf-8') as g:
+            for x in discard:
+                g.write('%s\n' %x)
+    # load
+    if state == "load":
+        with codecs.open('ColostleDeck.save', 'r', 'utf-8') as h:
+            for i in h.readlines():
+                deck.append(i)
+        with codecs.open('ColostleDiscard.save', 'r', 'utf-8') as d:
+            for x in d.readlines():
+                discard.append(x)
+        os.remove('ColostleDeck.save')
+        os.remove('ColostleDiscard.save')
+    return
 
 def quit():
     # quit
     print("")
+    save = input("Want to save the deck? ")
+    if save in ["y","yes"]:
+        save_load('save')
     print("Thanks for playing")
     sys.exit()
 

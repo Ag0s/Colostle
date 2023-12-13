@@ -1,7 +1,7 @@
 #! /usr/share/bin python3
 import itertools, random, sys, os.path, codecs
 
-show_deck_size = True
+show_deck_size = False
 
 cards = ["2",
         "3",
